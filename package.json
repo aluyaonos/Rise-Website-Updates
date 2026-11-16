@@ -1,0 +1,10 @@
+{
+  "name": "rise-global-hero",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "dialkit": "^2.1.0",
+    "motion": "^14.10.1"
+  }
+}

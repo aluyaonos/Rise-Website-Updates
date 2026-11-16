@@ -1,0 +1,174 @@
+.wallet-story {
+  --wallet-gutter: 120px;
+  position: relative;
+  z-index: 3;
+  overflow: clip;
+  padding-top: clamp(86.4px, 12vw, 172.8px);
+  background: #fff;
+}
+
+.wallet-story__stage {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100svh;
+  isolation: isolate;
+}
+
+.wallet-story__media {
+  --wallet-inset: calc((max(0px, (100% - 1440px) / 2) + var(--wallet-gutter)) * var(--wallet-closed, 1));
+  --wallet-radius: calc(24px * var(--wallet-closed, 1));
+  position: absolute;
+  inset: -2px 0;
+  overflow: clip;
+  background: #307789;
+  clip-path: inset(0 var(--wallet-inset) 0 round var(--wallet-radius) var(--wallet-radius) 0 0);
+  transform: translate3d(0, var(--wallet-offset, 0px), 0) scale(var(--wallet-scale, 1));
+}
+
+.wallet-story__media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translateY(calc(-3% * var(--wallet-closed, 1))) scale(calc(1 + .12 * var(--wallet-closed, 1)));
+}
+
+.customer-stories {
+  position: relative;
+  z-index: 4;
+  background: #fff;
+  color: #000;
+}
+
+.risers {
+  width: min(calc(100% - 2 * clamp(20px, 5vw, 56px)), 1200px);
+  margin-inline: auto;
+  padding: 140px 0 clamp(32px, 5vw, 56px);
+}
+
+.risers h2,
+.customer-reviews h2 {
+  margin: 0;
+  font: 600 clamp(26px, 3vw, 40px)/1.235 "Tomato Grotesk", sans-serif;
+  letter-spacing: -.02em;
+}
+
+.risers h2 em { color: var(--brand-500, #07969e); }
+
+.risers__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.risers__card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 304px;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 20px;
+  border: 0;
+  border-radius: 16px;
+  background: #1b1d20;
+  color: #fff;
+  font: 600 22px/1.2 "Tomato Grotesk", sans-serif;
+  cursor: pointer;
+}
+
+.risers__card img,
+.risers__card::after {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: -2;
+}
+
+.risers__card::after {
+  content: "";
+  z-index: -1;
+  background: linear-gradient(transparent 48%, rgb(0 0 0 / 70%));
+}
+
+.risers__play {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 40%);
+  color: #fff;
+}
+
+.risers__name { position: absolute; bottom: 20px; left: 24px; }
+
+.risers__dialog {
+  width: min(880px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 16px;
+  border: 0;
+  border-radius: 20px;
+  background: #1b1d20;
+  color: #fff;
+}
+
+.risers__dialog::backdrop { background: rgb(0 0 0 / 72%); }
+.risers__dialog video { display: block; width: 100%; max-height: 75dvh; }
+.risers__dialog-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.risers__dialog-bar h2 { font-size: 22px; }
+.risers__dialog-bar button { border: 0; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; }
+
+.customer-reviews { padding: clamp(56px, 8vw, 112px) 0 68px; }
+.customer-reviews__art { display: block; margin: 0 auto 16px; }
+.customer-reviews h2 { margin: 0 20px 40px; text-align: center; font-size: clamp(24px, 3vw, 32px); }
+
+.customer-reviews__row {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 20px;
+  margin: 0;
+  padding: 0 max(20px, calc((100% - 1200px) / 2)) 12px;
+  list-style: none;
+}
+
+.customer-reviews__row + .customer-reviews__row { margin-top: 20px; }
+.customer-reviews__row li {
+  display: flex;
+  flex: 0 0 min(400px, 82vw);
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 190px;
+  padding: 24px;
+  border: 1px solid #eaecf0;
+  border-radius: 20px;
+  background: #f8f9fa;
+  font: 500 16px/1.5 "Work Sans", sans-serif;
+  scroll-snap-align: start;
+}
+
+.customer-reviews__row p { margin: 0 0 24px; }
+.customer-reviews__row strong { display: flex; align-items: center; gap: 12px; }
+.customer-reviews__row strong img { border-radius: 50%; object-fit: cover; }
+
+@media (max-width: 1200px) {
+  .wallet-story { --wallet-gutter: 64px; }
+}
+
+@media (max-width: 700px) {
+  .wallet-story { --wallet-gutter: 24px; padding-top: 38.4px; }
+  .risers__grid { grid-template-columns: 1fr; margin-top: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wallet-story__media { clip-path: none; transform: none; }
+  .wallet-story__media video { transform: none; }
+}

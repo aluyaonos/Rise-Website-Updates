@@ -1,0 +1,102 @@
+@font-face {
+  font-family: "Work Sans";
+  src: url("../assets/fonts/WorkSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+.why-rise { background: #fff; }
+.rise-benefits {
+  --edge: clamp(24px, 8.3333vw, 120px);
+  --rail-gap: clamp(36px, 5.55vw, 80px);
+  background: #fff;
+  color: #000;
+  padding: 120px 0 var(--section-bottom, 120px);
+  overflow: clip;
+}
+.rise-benefits h2 {
+  margin: 0 auto 80px;
+  text-align: center;
+  font: 600 48px/58px "Tomato Grotesk", sans-serif;
+  letter-spacing: -.01em;
+}
+.rise-benefits h2.reveal-pending { opacity: 0; }
+.rise-benefits-scene {
+  width: min(100%, 1440px);
+  margin-inline: auto;
+  padding-inline: var(--edge);
+  display: grid;
+  grid-template-columns: minmax(0, 660fr) minmax(0, 460fr);
+  gap: var(--rail-gap);
+  align-items: start;
+}
+.rise-benefits-deck {
+  position: relative;
+  aspect-ratio: 660 / 491;
+  isolation: isolate;
+}
+.rise-benefits-card {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 100%;
+  border-radius: 24px;
+  transform: translateX(-50%) translateY(var(--y, 0px)) scale(var(--scale, 1));
+}
+.rise-benefits-card--teal { background: linear-gradient(#c4dfe6, #eaf4f6 77.783%); }
+.rise-benefits-card--purple {
+  --scale: .87;
+  --y: 9.9%;
+  background: linear-gradient(#d2b9f2, #e4d5f8 77.783%);
+}
+.rise-benefits-card--peach {
+  --scale: .7364;
+  --y: 19.9%;
+  background: linear-gradient(#f0dbcd, #faeee5);
+}
+.rise-benefits-rail { list-style: none; margin: 0; padding: 0; }
+.rise-benefits-rail li { margin-bottom: var(--item-gap, 40px); }
+.rise-benefits-rail li:last-child { margin-bottom: 0; }
+.rise-benefits-rail h3 { margin: 0; }
+.rise-benefits-rail button {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--heading-color, #000);
+  font: 600 clamp(21px, 1.95vw, 28px)/1.215 "Tomato Grotesk", sans-serif;
+  letter-spacing: -.01em;
+  text-align: left;
+  cursor: pointer;
+}
+.rise-benefits-rail button:focus-visible { outline: 2px solid #007483; outline-offset: 5px; }
+.rise-benefits-copy {
+  font: 500 16px/24px "Work Sans", sans-serif;
+  letter-spacing: -.03em;
+}
+.rise-benefits-copy p { margin: 0; }
+.rise-benefits-copy p + p { margin-top: 24px; }
+.rise-benefits-body { margin-top: 20px; }
+.rise-benefits[data-motion] .rise-benefits-track { height: calc(var(--scene-height) + 220svh); }
+.rise-benefits[data-motion] .rise-benefits-scene {
+  position: sticky;
+  top: var(--pin-top);
+  height: var(--scene-height);
+}
+.rise-benefits[data-motion] .rise-benefits-rail { transform: translateY(var(--rail-y, 0px)); }
+.rise-benefits[data-motion] .rise-benefits-body {
+  height: var(--body-height, 0px);
+  margin-top: var(--body-gap, 0px);
+}
+.rise-benefits[data-motion] .rise-benefits-copy {
+  opacity: var(--body-opacity, 0);
+  filter: blur(var(--body-blur, 0px));
+  transform: translateY(var(--body-y, 0px));
+}
+.rise-benefits[data-motion] .rise-benefits-body[aria-hidden="true"] { pointer-events: none; }
+.rise-benefits:not([data-motion]) .rise-benefits-rail button:disabled { cursor: default; opacity: 1; }
+
+@media (max-width: 1000px), (max-height: 680px) {
+  .rise-benefits { padding-block: 72px; }
+  .rise-benefits h2 { margin-bottom: 48px; font-size: 40px; line-height: 48px; }
+  .rise-benefits-scene { grid-template-columns: minmax(0, 660px); justify-content: center; gap: 64px; }
+}

@@ -1,0 +1,120 @@
+.app-banner {
+ position: relative;
+ z-index: 4;
+ padding-block: 72px;
+ background: #fff;
+ color: #000;
+}
+
+.app-banner-card {
+ position: relative;
+ container-type: inline-size;
+ width: min(calc(100% - 2 * clamp(24px, 8.333vw, 120px)), 1200px);
+ height: 408px;
+ margin-inline: auto;
+ border-radius: 24px;
+ overflow: hidden;
+ background: linear-gradient(#c4dfe6, #eaf4f6 77.783%);
+}
+
+.app-banner-orb {
+ position: absolute;
+ object-fit: cover;
+ pointer-events: none;
+}
+
+.app-banner-orb-lower { inset: 64.95% auto auto 55.24%; width: 17.64%; height: 55.39%; }
+.app-banner-orb-upper { inset: -19.12% -5.91% auto auto; width: 17.64%; height: 55.39%; }
+
+.app-banner-phone {
+ position: absolute;
+ top: 53px;
+ right: 7.522%;
+ width: 25.728%;
+ aspect-ratio: 308.736 / 671.232;
+ pointer-events: none;
+}
+
+.app-banner-screen {
+ display: block;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ border-radius: 14% / 6.4%;
+}
+
+.app-banner-frame {
+ position: absolute;
+ left: -5.97%;
+ top: -2.631%;
+ width: 111.94%;
+ height: 105.263%;
+}
+
+.app-banner-content {
+ position: absolute;
+ top: calc(50% - 16.43px);
+ left: clamp(24px, 3.25cqw, 39px);
+ width: min(552px, 60%);
+ transform: translateY(-50%);
+}
+
+.app-banner h2 {
+ margin: 0 0 35px;
+ font: 600 clamp(30px, 3.334cqw, 40px)/1.25 "Tomato Grotesk", sans-serif;
+ letter-spacing: -.01em;
+}
+
+.app-banner-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+
+.app-banner-actions a,
+.app-banner-download {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ border-radius: 50px;
+ text-decoration: none;
+ font: 600 16px/24px "Tomato Grotesk", sans-serif;
+}
+
+.app-banner-invest { width: 210px; gap: 16px; padding: 14px 24px; background: #006d79; color: #fff; }
+.app-banner-download-menu { position: relative; }
+.app-banner-download { gap: 10px; padding: 12px 20px 12px 16px; background: #fff; color: #1b1d20; cursor: pointer; list-style: none; }
+.app-banner-download::-webkit-details-marker { display: none; }
+.app-banner-store-links {
+ position: absolute;
+ z-index: 1;
+ inset: calc(100% + 8px) 0 auto;
+ display: grid;
+ padding: 4px;
+ background: #fff;
+ border-radius: 16px;
+ box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+}
+.app-banner-download-menu:not([open]) .app-banner-store-links { display: none; }
+.app-banner-store-links a { color: #006d79; min-height: 40px; }
+.app-banner-store-links a:hover { background: #eaf4f6; }
+.app-banner-stores { display: inline-flex; align-items: center; gap: 8px; padding-inline: 3px; }
+.app-banner-store-divider { position: relative; width: 1px; height: 16px; }
+.app-banner-store-divider img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(90deg); }
+.app-banner-actions :is(a, summary):focus-visible { outline: 2px solid #006d79; outline-offset: 4px; }
+
+@media (max-width: 860px) {
+ .app-banner { padding-block: 48px; }
+ .app-banner-card { height: auto; padding: 32px 24px 0; }
+ .app-banner-content { position: relative; z-index: 1; inset: auto; width: auto; transform: none; }
+ .app-banner h2 { margin-bottom: 24px; }
+ .app-banner-phone {
+  position: relative;
+  inset: auto;
+  width: min(72%, 270px);
+  min-height: 0;
+  margin: 36px auto 0;
+  aspect-ratio: 1 / 1;
+ }
+ .app-banner-screen { height: auto; aspect-ratio: 308.736 / 671.232; }
+ .app-banner-frame { top: 0; height: auto; transform: translateY(-2.5%); }
+ .app-banner-card { display: flex; flex-direction: column; }
+ .app-banner-content { order: -1; }
+ .app-banner-orb { width: 42%; height: auto; aspect-ratio: 1; }
+}

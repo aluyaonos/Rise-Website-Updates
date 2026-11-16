@@ -1,0 +1,10 @@
+node_modules/
+interaction-journal/
+verification/
+undefined/
+.DS_Store
+*.log
+.env
+.env.*
+__pycache__/
+*.pyc

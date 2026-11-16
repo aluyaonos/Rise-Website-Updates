@@ -1,0 +1,30 @@
+@font-face{font-family:Work Sans;src:url('./assets/fonts/WorkSans-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
+html{background:#fff;scroll-behavior:auto}body{overflow-x:clip;overflow-y:auto;background:white}.hero-runway{height:180svh;background:linear-gradient(#007483,#0898a0)}.hero{position:sticky;top:0}.field{touch-action:pan-y}.mission{position:relative;background:white;color:#000;padding:104px 0 76px;z-index:3}.mission-grid{max-width:1440px;margin:0 auto;padding:0 120px;display:grid;grid-template-columns:440px 540px;justify-content:space-between;align-items:stretch;gap:80px}.mission-left-track{position:relative}.mission-left{position:sticky;top:104px;display:flex;flex-direction:column;gap:40px;align-items:flex-start}.mission-image{width:440px;max-width:100%;height:auto;aspect-ratio:22/15;flex-shrink:0;border-radius:16px;background:linear-gradient(#c4dfe6,#eaf4f6 77.783%);overflow:hidden}.mission-image img{width:100%;height:100%;object-fit:cover;display:block}.mission h2{font:600 36px/42px Tomato Grotesk,sans-serif;letter-spacing:-.36px;margin:0}.mission-copy{font:500 16px/24px Work Sans,sans-serif;letter-spacing:-.48px}.mission-copy p{margin:0 0 24px}.mission-copy p:last-child{margin-bottom:0}.mission-stats{margin-top:180px}.mission-stats-label{font:500 16px/24px Work Sans,sans-serif;letter-spacing:-.48px;padding:20px 2px;margin:0;border-bottom:1px solid #eaecf0}.mission-stat{padding:72px 0;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid #eaecf0}.mission-value{font:600 112px/120px Tomato Grotesk,sans-serif;letter-spacing:-2.24px;margin:0}.mission-caption{font:500 20px/28px Work Sans,sans-serif;letter-spacing:-.6px;color:#42464e;margin:0}.mission-countries{display:flex;align-items:center;gap:16px}.country-flags{display:flex;align-items:center}.country-flags img{flex:none;display:block;margin-right:-24px}.country-flags img:last-child{margin:0}.handoff-image{position:fixed;inset:0 auto auto 0;z-index:6;pointer-events:none;overflow:hidden;visibility:hidden;will-change:transform,width,height;border-radius:12px}.handoff-image img{width:100%;height:100%;object-fit:cover;display:block}.hero h1,.hero .field,.hero .navigation{opacity:var(--hero-visibility,1)}
+@media(max-width:1200px){.mission-grid{padding-inline:64px;grid-template-columns:minmax(0,440px) minmax(0,540px);gap:80px}.mission-value{font-size:clamp(72px,7.78vw,112px)}.country-flags img{margin-right:-32px}.country-flags{transform:scale(.8);transform-origin:left center}}
+@media(max-width:700px){.hero-runway{height:150svh}.mission{padding:64px 0}.mission-grid{padding:0 24px;display:block}.mission-left{position:relative;top:auto;gap:28px}.mission h2{font-size:30px;line-height:36px;max-width:399px}.mission-right{margin-top:48px}.mission-image{width:220px}.mission-stats{margin-top:80px}.mission-stat{padding:48px 0}.mission-value{font-size:72px;line-height:80px}.mission-caption{font-size:18px;line-height:26px}.country-flags{width:280px;transform:scale(.72)}.mission-countries{gap:12px;overflow:visible}}
+@media(prefers-reduced-motion:reduce){.hero-runway{height:100svh}.handoff-image{display:none!important}.mission-left{position:relative;top:auto}}
+/* The source and destination share one viewport of travel; no empty pin runway. */
+.hero-runway{height:100svh}
+.hero .field{opacity:1}
+.country-flags img{border-radius:50%;box-shadow:0 0 0 5.333px #fff;transform:translate3d(calc(var(--flag-spread,0px) * var(--flag-index,0)),0,0);transform-origin:center;will-change:transform}
+@media (prefers-reduced-motion:no-preference){
+ #mission-title.mission-reveal-pending,
+ .mission-stat.mission-reveal-pending .mission-countries,
+ .mission-stat.mission-reveal-pending .mission-value,
+ .mission-stat.mission-reveal-pending .mission-caption{opacity:0}
+}
+.mission-reveal-line{display:block}
+.mission-counting{display:inline-grid}
+.mission-counting span{grid-area:1 / 1}
+.mission-count-original{opacity:0}
+@media(min-width:701px) and (prefers-reduced-motion:no-preference){
+ .mission-left-track {
+  --mission-pin-clearance: 86px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* Extend the sticky track to the heading baseline and the divider's center. */
+  margin-bottom: calc(0px - var(--mission-pin-clearance) - 8.5px);
+ }
+ .mission-left{top:auto;bottom:0;height:100svh;flex:none;justify-content:flex-end;padding-bottom:var(--mission-pin-clearance);margin-top:calc(510px - 100svh)}
+}

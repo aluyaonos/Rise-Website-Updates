@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Why Rise. Making wealth creation easier for Africans.">
+  <title>Why Rise | Rise</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../vendor/dialkit/styles.css">
+  <link rel="stylesheet" href="./stories.css">
+  <link rel="stylesheet" href="./benefits.css">
+  <script type="module" src="./stories.js"></script>
+  <script type="module" src="./tuning.js"></script>
+  <script type="module" src="../page-switcher.js"></script>
+  <script type="module" src="./benefits.js"></script>
+</head>
+<body class="why-rise">
+  <main>
+  <section class="hero stories" aria-labelledby="stories-title">
+    <div class="stories-background" aria-hidden="true">
+      <canvas class="stories-previous-frame"></canvas>
+      <canvas class="stories-live-frame"></canvas>
+    </div>
+    <div class="stories-orbs" aria-hidden="true">
+      <img src="./assets/orb.png" alt="">
+      <img src="./assets/orb.png" alt="">
+      <img src="./assets/orb.png" alt="">
+    </div>
+    <header class="navigation">
+      <a href="/plans/" class="brand" aria-label="Go to Rise plans"><img src="./assets/logo.svg" alt="Rise"></a>
+      <nav aria-label="Main navigation">
+        <a href="/why-rise/" aria-current="page">Why Rise</a>
+        <a href="https://risevest.com/blog">Blog</a>
+        <a href="https://risevest.com/business">Rise for&nbsp; Business</a>
+      </nav>
+      <div class="actions">
+        <a class="button start" href="https://app.risevest.com/sign-up/select-country">Get started</a>
+        <a class="button signin" href="https://app.risevest.com/">Sign in</a>
+      </div>
+    </header>
+
+    <div class="stories-content">
+      <div class="stories-deck" role="group" aria-label="Riser stories">
+        <button class="story-card" type="button" aria-label="Sanmi" aria-pressed="true">
+          <img class="story-poster" src="./assets/sanmi.jpg" alt="">
+          <video muted playsinline loop preload="none" data-src="./assets/sanmi.mp4" aria-hidden="true"></video>
+          <span class="story-caption" aria-hidden="true">
+            <span class="story-name">Sanmi</span><span class="story-progress"><span></span></span>
+          </span>
+        </button>
+        <button class="story-card" type="button" aria-label="Layo" aria-pressed="false">
+          <img class="story-poster" src="./assets/layo.jpg" alt="">
+          <video muted playsinline loop preload="none" data-src="./assets/layo.mp4" aria-hidden="true"></video>
+          <span class="story-caption" aria-hidden="true">
+            <span class="story-name">Layo</span><span class="story-progress"><span></span></span>
+          </span>
+        </button>
+        <button class="story-card" type="button" aria-label="Henry" aria-pressed="false">
+          <img class="story-poster" src="./assets/henry.jpg" alt="">
+          <video muted playsinline loop preload="none" data-src="./assets/henry.mp4" aria-hidden="true"></video>
+          <span class="story-caption" aria-hidden="true">
+            <span class="story-name">Henry</span><span class="story-progress"><span></span></span>
+          </span>
+        </button>
+      </div>
+
+      <div class="stories-message">
+        <h1 id="stories-title">Making wealth creation easier for Africans</h1>
+        <div class="stories-action-row">
+          <div class="stories-links">
+            <a class="stories-invest" href="https://app.risevest.com/sign-up/select-country">Start investing <img src="./assets/arrow.svg" alt=""></a>
+            <details class="stories-download">
+              <summary>
+                <span class="stories-store-icons" aria-hidden="true">
+                  <img src="./assets/apple.svg" alt="">
+                  <span><img src="./assets/divider.svg" alt=""></span>
+                  <img src="./assets/google-play.svg" alt="">
+                </span>
+                Download app
+              </summary>
+              <div class="stories-store-links">
+                <a href="https://apps.apple.com/gb/app/risevest/id1486295645">App Store</a>
+                <a href="https://play.google.com/store/apps/details?id=com.rise.mobile">Google Play</a>
+              </div>
+            </details>
+          </div>
+          <button class="stories-toggle" type="button" aria-label="Play background video">
+            <img class="stories-play" src="./assets/play.svg" alt="">
+            <img class="stories-pause" src="./assets/pause.svg" alt="">
+          </button>
+        </div>
+        <p class="stories-status" role="status"></p>
+      </div>
+    </div>
+  </section>
+  <section class="rise-benefits" aria-labelledby="rise-benefits-title">
+    <h2 id="rise-benefits-title">Why Rise</h2>
+    <div class="rise-benefits-track">
+      <div class="rise-benefits-scene">
+        <div class="rise-benefits-deck" aria-hidden="true">
+          <div class="rise-benefits-card rise-benefits-card--peach"></div>
+          <div class="rise-benefits-card rise-benefits-card--purple"></div>
+          <div class="rise-benefits-card rise-benefits-card--teal"></div>
+        </div>
+        <ol class="rise-benefits-rail">
+          <li>
+            <h3><button type="button" aria-controls="rise-benefits-dollar">Dollar Denominated Investments</button></h3>
+            <div class="rise-benefits-body" id="rise-benefits-dollar">
+              <div class="rise-benefits-copy"><p>Generations of Africans have worked hard and invested over years only to see their efforts at wealth creation hindered due to high inflation, low growth and currency devaluation. The richest among us avoid these and grow their wealth by investing globally in dollar denominated investments scattered across the world or in sophisticated assets at home. But every day people had no access to these kind of investments, until now.</p></div>
+            </div>
+          </li>
+          <li>
+            <h3><button type="button" aria-controls="rise-benefits-returns">8% to 15% Interest Per Annum</button></h3>
+            <div class="rise-benefits-body" id="rise-benefits-returns">
+              <div class="rise-benefits-copy"><p>We offer investments across real estate, stocks, and fixed income, historically generating between 8% to 15% and more in returns for users. All users are welcome, and with a minimum of $10 you can start your investment journey with our expert support.</p></div>
+            </div>
+          </li>
+          <li>
+            <h3><button type="button" aria-controls="rise-benefits-regulated">Regulated Investment Products</button></h3>
+            <div class="rise-benefits-body" id="rise-benefits-regulated">
+              <div class="rise-benefits-copy">
+                <p>All investment products available on the Rise app are powered and managed by duly licensed fund managers and regulated entities within the investor’s applicable jurisdiction.</p>
+                <p>Our offerings are held and managed through licensed partners, with each product structured to comply with relevant regulatory requirements. Expert fund managers research, select, and manage the underlying investments, while Rise provides investors with access, portfolio visibility, and regular updates to help them track the performance and growth of their investments.</p>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+  </main>
+</body>
+</html>

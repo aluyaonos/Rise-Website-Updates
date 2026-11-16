@@ -1,0 +1,144 @@
+.team-roster {
+ --team-roster-portrait-width: 390px;
+ --team-roster-top: 120px;
+ --team-roster-bottom: 160px;
+ --team-roster-portrait-inset: 32px;
+ --brand-600: #006d79;
+ color: #000;
+ padding-block: var(--team-roster-top) var(--team-roster-bottom);
+}
+
+.team-roster-grid {
+ width: min(calc(100% - 2 * clamp(24px, 8.333vw, 120px)), 1200px);
+ margin-inline: auto;
+ display: grid;
+ grid-template-columns: minmax(0, var(--team-roster-portrait-width)) minmax(0, 546px);
+ justify-content: space-between;
+ gap: clamp(32px, 8vw, 120px);
+}
+
+.team-roster-intro {
+ display: flex;
+ flex-direction: column;
+ gap: 56px;
+}
+
+.team-roster h2 {
+ margin: 0;
+ padding-block: 24px;
+ font: 600 36px/42px "Tomato Grotesk", sans-serif;
+ letter-spacing: -.01em;
+}
+
+.team-roster-preview {
+ position: relative;
+ width: 100%;
+ aspect-ratio: 390 / 420;
+ border-radius: 16px;
+ overflow: hidden;
+ background: linear-gradient(#c4dfe6, #eaf4f6 77.783%);
+}
+
+.team-roster-preview-track {
+ flex: 1;
+ display: flex;
+ align-items: flex-end;
+}
+
+.team-roster-preview img {
+ position: absolute;
+ inset: 0;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ opacity: 0;
+ transition: opacity 320ms ease-in-out;
+}
+
+.team-roster-preview img.is-visible { opacity: 1; }
+
+.team-roster-list {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+}
+
+.team-roster-list li {
+ position: relative;
+ border-bottom: 1px solid #eaecf0;
+}
+
+.team-roster-list li::after {
+ content: "";
+ position: absolute;
+ inset: auto 0 -1px;
+ height: 1px;
+ background: var(--brand-600);
+ pointer-events: none;
+ transform: scaleX(0);
+ transform-origin: left;
+ transition: transform 750ms cubic-bezier(.62, .05, .01, .99);
+}
+
+@media (hover: hover) {
+ .team-roster-list li:hover::after { transform: scaleX(1); }
+}
+
+.team-roster-list li:has(:focus-visible)::after { transform: scaleX(1); }
+
+.team-roster-list button {
+ appearance: none;
+ display: grid;
+ grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+ align-items: center;
+ gap: 16px;
+ width: 100%;
+ padding: 40px 0;
+ border: 0;
+ background: transparent;
+ color: inherit;
+ text-align: left;
+ cursor: pointer;
+ font: 600 20px/24px "Tomato Grotesk", sans-serif;
+ letter-spacing: -.01em;
+}
+
+.team-roster-list button span:last-child {
+ text-align: right;
+ font: 500 20px/24px "Work Sans", sans-serif;
+ letter-spacing: -.04em;
+}
+
+.team-roster-list button:focus-visible {
+ outline: 2px solid #007483;
+ outline-offset: 4px;
+}
+
+@media (min-width: 768px) and (min-height: 480px) {
+ .team-roster-preview {
+  position: sticky;
+  bottom: var(--team-roster-portrait-inset);
+  max-height: calc(100svh - var(--team-roster-top) - 184px);
+ }
+}
+
+@media (max-width: 767px) {
+ .team-roster-grid { grid-template-columns: minmax(0, 1fr); }
+ .team-roster h2 { padding-block: 0; font-size: 30px; line-height: 36px; }
+ .team-roster-preview-track { display: none; }
+ .team-roster-list button { padding-block: 28px; }
+ .team-roster-list button,
+ .team-roster-list button span:last-child { font-size: 16px; line-height: 22px; }
+ .team-roster-inline img {
+  display: block;
+  width: min(160px, 100%);
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 20px;
+ }
+}
+
+@media (prefers-reduced-motion: reduce) {
+ .team-roster-preview img,
+ .team-roster-list li::after { transition: none; }
+}

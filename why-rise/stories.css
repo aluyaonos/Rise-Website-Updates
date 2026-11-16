@@ -1,0 +1,279 @@
+.why-rise { overflow: visible; }
+
+.stories.hero {
+  --card-gap: 16px;
+  --card-radius: 16px;
+  --media-stroke: inset 0 0 0 2px rgb(255 255 255 / .2);
+  --active-height: 288px;
+  --inactive-height: 200px;
+  --active-share: .41952;
+  --deck-top: var(--tuned-deck-top, 208px);
+  --deck-inset: max(114px, calc(22svh + var(--deck-top) - 208px));
+  --tall-deck-offset: 0px;
+  --footer-bottom: var(--tuned-footer-bottom, 104px);
+  --resize-duration: 1000ms;
+  /* Sampled exponential ease-out, shared by the card and poster crop. */
+  --resize-easing: linear(0, .293 5%, .5 10%, .646 15%, .75 20%, .875 30%, .9375 40%, .969 50%, .984 60%, .996 80%, 1);
+  --fade-duration: 320ms;
+  --caption-blur: 3px;
+  --video-shade: .42;
+  height: auto;
+  min-height: 100svh;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.stories-background, .stories-orbs {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: opacity var(--fade-duration) ease-in-out;
+}
+.stories-background { opacity: 0; }
+.stories-background canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(calc(1 - var(--video-shade)));
+}
+.story-card::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--media-stroke);
+  pointer-events: none;
+}
+.stories[data-video-visible] .stories-background { opacity: 1; }
+.stories[data-video-visible] .stories-orbs { opacity: 0; }
+.stories-orbs {
+  max-width: 1440px;
+  margin-inline: auto;
+  translate: 0 var(--tall-deck-offset);
+}
+.stories-orbs img { position: absolute; width: min(360px, 32vw); aspect-ratio: 1; }
+.stories-orbs img:nth-child(1) { top: 88px; left: 0; }
+.stories-orbs img:nth-child(2) { top: 268px; right: 0; }
+.stories-orbs img:nth-child(3) { bottom: -200px; right: 31.3%; }
+.stories[data-variant="2"] .stories-orbs img:nth-child(1) { top: calc(var(--deck-inset) - 121px); }
+.stories[data-variant="2"] .stories-orbs img:nth-child(2) { top: calc(var(--deck-inset) + 123px); }
+.stories[data-variant="2"] .stories-orbs img:nth-child(3) { bottom: -211px; right: 40%; }
+
+.stories-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 56px;
+  max-width: 1440px;
+  min-height: inherit;
+  margin-inline: auto;
+  padding: calc(var(--deck-inset) + var(--tall-deck-offset)) 120px var(--footer-bottom);
+}
+@media (height > 952px) {
+  .stories.hero { --tall-deck-offset: 40px; }
+}
+.stories-deck {
+  --deck-width: calc(100% - 2 * var(--card-gap));
+  --active-width: calc(var(--deck-width) * var(--active-share));
+  --inactive-width: calc(var(--deck-width) * (1 - var(--active-share)) / 2);
+  display: flex;
+  align-items: var(--card-alignment, flex-start);
+  gap: var(--card-gap);
+  min-height: var(--active-height);
+}
+.story-card {
+  position: relative;
+  flex: 0 0 var(--inactive-width);
+  min-width: 0;
+  height: var(--inactive-height);
+  box-sizing: border-box;
+  padding: 0;
+  overflow: hidden;
+  color: inherit;
+  border: 0;
+  border-radius: var(--card-radius);
+  background: #005864;
+  cursor: pointer;
+  transition:
+    flex-basis var(--resize-duration) var(--resize-easing),
+    height var(--resize-duration) var(--resize-easing),
+    filter var(--inactive-background-duration, 200ms) linear,
+    opacity var(--inactive-background-duration, 200ms) linear;
+}
+.story-card[aria-pressed="true"] { flex-basis: var(--active-width); height: var(--active-height); }
+.stories[data-inactive-blur][data-background-playing]:not([data-variant="2"]) .story-card[aria-pressed="false"] {
+  filter: blur(3px);
+  opacity: .75;
+}
+@media (any-hover: hover) and (any-pointer: fine) {
+  .stories[data-variant="2"][data-inactive-blur] .stories-deck:has(> .story-card:hover) > .story-card[aria-pressed="false"] {
+    filter: blur(3px);
+    opacity: .75;
+  }
+}
+.story-card :is(video, .story-poster) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 24%;
+  pointer-events: none;
+}
+.story-card .story-poster { height: calc(100% + 40px); object-position: center top; transition: height var(--resize-duration) var(--resize-easing); }
+.story-card[aria-pressed="true"] .story-poster { height: calc(100% + 64px); }
+.story-card video { opacity: 0; transition: opacity var(--fade-duration) ease-in-out; }
+.story-card[data-live] video { opacity: 1; }
+.story-caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 64px 24px 24px;
+  font: 600 20px/24px "Tomato Grotesk", sans-serif;
+  letter-spacing: -.01em;
+  opacity: 0;
+  pointer-events: none;
+  isolation: isolate;
+  transition: opacity var(--fade-duration) ease-in-out;
+}
+.story-caption::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(transparent, rgb(27 29 32 / .52));
+  backdrop-filter: blur(var(--caption-blur));
+  mask-image: linear-gradient(transparent, black);
+}
+.story-card[aria-pressed="true"] .story-caption { opacity: 1; }
+.story-progress { flex: 0 0 48px; height: 6px; overflow: hidden; border-radius: 12px; background: rgb(255 255 255 / .2); }
+.story-progress span { display: block; height: 100%; background: white; border-radius: inherit; transform-origin: left; transform: scaleX(var(--story-progress, 0)); }
+
+.stories-message h1 {
+  position: static;
+  transform: none;
+  width: 706px;
+  max-width: 100%;
+  text-align: left;
+  font-size: 56px;
+  line-height: 66px;
+  letter-spacing: -.01em;
+}
+.stories-action-row, .stories-links { display: flex; align-items: center; gap: 16px; }
+.stories-action-row { justify-content: space-between; margin-top: 40px; }
+.stories[data-variant="2"] .stories-message {
+  position: relative;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+.stories[data-variant="2"] .stories-message h1 { width: 620px; }
+.stories[data-variant="2"] .stories-action-row { flex: 0 0 auto; margin: 0; }
+.stories[data-variant="2"] .stories-toggle { display: none; }
+.stories[data-variant="2"] .stories-status { inset-block-start: 100%; }
+.stories-invest, .stories-download summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  border-radius: 50px;
+  font: 600 16px/20px "Tomato Grotesk", sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+}
+.stories-invest { width: 210px; background: #fff; color: #006d79; }
+.stories-invest img { transform: rotate(45deg); margin-inline: 2px; }
+.stories-download { position: relative; }
+.stories-download summary {
+  height: 52px;
+  padding: 12px 32px;
+  background: #005864;
+  line-height: normal;
+  letter-spacing: -.01em;
+  list-style: none;
+}
+.stories-download summary::-webkit-details-marker { display: none; }
+.stories-store-icons { display: flex; align-items: center; gap: 6.879px; }
+.stories-store-icons > img {
+  box-sizing: content-box;
+  padding: 2.903px;
+}
+.stories-store-icons span {
+  display: grid;
+  flex: 0 0 0;
+  place-items: center;
+  width: 0;
+  height: 16px;
+}
+.stories-store-icons span img {
+  width: 16px;
+  max-width: none;
+  transform: rotate(90deg);
+}
+.stories-store-links { position: absolute; bottom: calc(100% + 8px); z-index: 2; min-width: 100%; padding: 8px; background: #005864; border-radius: 16px; }
+.stories-store-links a { display: block; padding: 8px 12px; color: white; }
+.stories-toggle {
+  display: grid;
+  flex: 0 0 52px;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / .1);
+  border-radius: 64px;
+  background: rgb(255 255 255 / .2);
+  cursor: pointer;
+}
+.stories-pause, .stories[data-background-playing] .stories-play { display: none; }
+.stories[data-background-playing] .stories-pause { display: block; }
+.stories :is(button, summary):focus-visible { outline: 2px solid white; outline-offset: 4px; }
+.stories-status { position: absolute; margin: 8px 0 0; font-size: 14px; }
+
+@media (max-width: 1100px) {
+  .stories-content { padding-inline: 48px; }
+}
+@media (max-width: 900px) {
+  .stories[data-variant="2"] .stories-message { flex-direction: column; align-items: start; }
+}
+@media (max-width: 700px) {
+  .stories.hero {
+    --deck-top: min(130px, var(--tuned-deck-top, 208px));
+    --deck-inset: var(--deck-top);
+    --footer-bottom: min(56px, var(--tuned-footer-bottom, 104px));
+  }
+  .stories-content { padding-inline: 24px; gap: 42px; }
+  .stories-deck {
+    --deck-width: calc(100% - 2 * min(8px, var(--card-gap)));
+    --active-share: .5;
+    gap: min(8px, var(--card-gap));
+    min-height: min(240px, var(--active-height));
+  }
+  .story-card { height: min(132px, var(--inactive-height)); }
+  .story-card[aria-pressed="true"] { height: min(240px, var(--active-height)); }
+  .story-caption { padding: 44px 8px 12px; font-size: 16px; }
+  .story-progress { flex-basis: 25px; height: 4px; }
+  .stories-message h1 { font-size: clamp(38px, 8vw, 56px); line-height: 1.12; }
+  .stories-action-row { gap: 8px; margin-top: 24px; }
+  .stories-links { flex-wrap: wrap; gap: 8px; }
+  .stories-invest { width: auto; padding-inline: 16px; }
+  .stories-download summary { padding-inline: 20px; }
+  .stories-invest, .stories-download summary { min-height: 44px; font-size: 14px; }
+  .stories-orbs img:nth-child(3) { bottom: -45px; }
+  .stories[data-variant="2"] .stories-orbs img:nth-child(1) { top: calc(var(--deck-inset) - 44px); }
+  .stories[data-variant="2"] .stories-orbs img:nth-child(3) { bottom: -45px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stories-deck { --inactive-background-duration: 0ms; }
+  .stories.hero { --resize-duration: 0ms !important; --fade-duration: 0ms !important; }
+}
