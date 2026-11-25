@@ -1,7 +1,6 @@
 import { createPlanReader } from "./plan-reader.js?v=67";
 
-const headline =
-  "Put your money to work, with plans made for every way you want to grow.";
+import { defaultHeadline as headline } from "../interactions/growth-words.js?v=7";
 
 function createHeadline() {
   const title = document.createElement("h2");
@@ -54,7 +53,10 @@ export function createGrowthPlansSection() {
     const cardPeek = window.matchMedia("(max-width: 760px)").matches ? 200 : 169;
     const titleBottom = title.offsetTop + title.offsetHeight;
     const originalGap = Math.max(0, originalHeight - cardPeek - titleBottom);
-    stage.style.height = `${originalHeight - originalGap * 0.44 - 160}px`;
+    stage.style.height = `${Math.max(
+      originalHeight - originalGap * 0.44 - 160,
+      titleBottom + cardPeek + 64,
+    )}px`;
   };
   const spacingObserver = new ResizeObserver(updateSpacing);
   spacingObserver.observe(stage.querySelector("h2"));

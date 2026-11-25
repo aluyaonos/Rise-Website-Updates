@@ -21,3 +21,5 @@ The Why Rise playback and card handoff are recorded under `why-rise-stories`.
 The preview page switcher is recorded under `preview-page-switcher`.
 
 The Why Rise benefits deck and reading sequence are recorded under `why-rise-benefits`.
+
+The Plans headline illustration interaction is recorded under `plans-word-assets`.

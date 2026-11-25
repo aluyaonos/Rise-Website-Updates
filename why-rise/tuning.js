@@ -1,5 +1,6 @@
 import { createDialKit, createDialRoot } from "../vendor/dialkit/index.js";
 import { applyStoryLayout } from "./stories.js";
+import { activeContentGapControl, initialTitleGapControl, setBenefitGaps } from "./benefits.js?v=initial-gap";
 
 const panelId = "rise-why-rise-hero-v1";
 const resizeControl = "Resize duration (ms)";
@@ -24,6 +25,15 @@ try {
 }
 
 createDialRoot({ position: "bottom-right", theme: "dark", versions: "menu", defaultOpen: false });
+
+const gapControl = "Active content gap (px)";
+const initialGapControl = "Initial title gap (px)";
+const benefitsKit = createDialKit("Why Rise benefits", {
+  [initialGapControl]: initialTitleGapControl,
+  [gapControl]: activeContentGapControl,
+}, { id: "rise-why-rise-benefits", persist: true, defaultCollapsed: false });
+
+benefitsKit.subscribe(values => setBenefitGaps(values[gapControl], values[initialGapControl]));
 
 const alignments = [
   { value: "flex-start", label: "Top" },

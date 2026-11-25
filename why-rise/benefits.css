@@ -82,7 +82,10 @@
   top: var(--pin-top);
   height: var(--scene-height);
 }
-.rise-benefits[data-motion] .rise-benefits-rail { transform: translateY(var(--rail-y, 0px)); }
+.rise-benefits[data-motion] .rise-benefits-rail {
+  overflow-anchor: none;
+  transform: translateY(var(--rail-y, 0px));
+}
 .rise-benefits[data-motion] .rise-benefits-body {
   height: var(--body-height, 0px);
   margin-top: var(--body-gap, 0px);

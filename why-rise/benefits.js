@@ -1,3 +1,5 @@
+import { drawPlanStack, getPlanStackPoses, getPlanStackProgress } from "../plans/src/interactions/plan-stack.js";
+
 const section = document.querySelector(".rise-benefits");
 const title = section.querySelector("h2");
 const track = section.querySelector(".rise-benefits-track");
@@ -16,14 +18,28 @@ const compact = matchMedia("(max-width: 1000px), (max-height: 680px)");
 const clamp = value => Math.max(0, Math.min(value, 1));
 const mix = (a, b, t) => a + (b - a) * t;
 const ease = t => t * t * (3 - 2 * t);
-const handoffStart = .38;
-const handoffEnd = .62;
-const firstRead = .14;
+const firstRead = .19;
 const lastRead = .88;
 const entryStart = -.18;
 const scrubMs = 250;
+const headingGap = 38;
+export const activeContentGapControl = [88, headingGap, 160, 1];
+export const initialTitleGapControl = [64, headingGap, 160, 1];
+let activeHeadingGap = activeContentGapControl[0];
+let initialTitleGap = initialTitleGapControl[0];
+const copyGap = 20;
+const fadeStart = .32;
+const fadeEnd = .40;
+const entryCardVisibility = .7;
+const entrySpaceStart = .18;
+const entrySpaceEnd = .88;
+const entryCopyStart = .82;
+const entryCopyEnd = .97;
+const firstSpaceHandoffInset = .10;
+const spaceHandoffInset = .24;
 let frame = 0;
 let current;
+let cardCurrent;
 let lastTime = 0;
 let accessibilityState;
 
@@ -45,64 +61,61 @@ if (!reduced.matches) {
   reduced.addEventListener("change", () => title.classList.remove("reveal-pending"), { once: true });
 }
 
-function drawDeck(progress, vh, height) {
-  // Both exits cross the centre of the incoming card at the title handoff.
-  const handoff = step => clamp((progress - step - handoffStart) / (handoffEnd - handoffStart));
-  const exitDistance = t => height * ease(t) + (vh - height) * ease(clamp(2 * t - 1));
-  const firstHandoff = handoff(0);
-  const secondHandoff = handoff(1);
-  const purpleRise = ease(firstHandoff);
-  const peachRise = ease(secondHandoff);
-  const tealExit = exitDistance(firstHandoff);
-  const purpleExit = exitDistance(secondHandoff);
-  const spread = ease(clamp(progress / handoffStart));
-  const purpleScale = mix(.87, 1, purpleRise);
-  const peachScale = progress < 1 + handoffStart
-    ? purpleScale * mix(.7364 / .87, .87, ease(clamp(purpleRise / .35)))
-    : mix(.87, 1, peachRise);
-  const purpleReveal = mix(mix(17, 47, spread), 0, purpleRise) / 491;
-  const tealBottomToPurpleMiddle = height * (purpleScale / 2 - purpleReveal) - tealExit;
-  const restore = ease(clamp(1 - tealBottomToPurpleMiddle / (height * .34)));
-  const peachReveal = mix(mix(16, 38, spread) * (1 + .2 * spread * (1 - restore)), 17, purpleRise)
-    / 491 * (1 - peachRise);
-  const scales = [1, purpleScale, peachScale];
-  const offsets = [
-    -tealExit,
-    (purpleReveal + (1 - purpleScale) / 2) * height - purpleExit,
-    (purpleReveal + peachReveal + (1 - peachScale) / 2) * height,
-  ];
-  cards.forEach((card, index) => {
-    card.style.setProperty("--y", `${offsets[index]}px`);
-    card.style.setProperty("--scale", scales[index]);
-  });
-}
-
-function drawRail(progress, cardHeight, sizes, vh, pinTop) {
+function drawRail(progress, cardHeight, sizes, vh, pinTop, sceneTop) {
+  const openGapBonus = activeHeadingGap - headingGap;
   const active = Math.max(0, Math.round(progress));
   const entry = clamp(progress + 1);
-  const anchors = [125, 146, 93].map(value => value / 491 * cardHeight);
-  const lower = Math.max(0, Math.min(1, Math.floor(progress)));
-  const anchor = mix(anchors[lower], anchors[lower + 1], clamp(progress - lower));
-  const entryOffset = Math.max(0, vh - pinTop - anchor) * (1 - entry) ** 4;
-  const targetTop = anchor + entryOffset;
-  const expandedIndex = Math.abs(progress - active) < .5 ? active : -1;
-  const nextAccessibilityState = `${active}:${expandedIndex}`;
-  let y = 0;
-  const positions = items.map(({ row, button, body, copy }, index) => {
+  const anchor = 125 / 491 * cardHeight;
+  const lastIndex = items.length - 1;
+  // Keep reserves non-increasing before the final heading so an opening
+  // description never adds more space than the preceding one gives up.
+  const reserves = sizes.map(({ copy }, index) => index < lastIndex
+    ? Math.max(...sizes.slice(index, lastIndex).map(size => size.copy))
+    : copy);
+  const collapsedSpan = sizes.slice(0, lastIndex)
+    .reduce((span, size) => span + size.heading + headingGap, 0);
+  const travelPerStep = (collapsedSpan + 32 / 491 * cardHeight) / lastIndex;
+  // Place the first title at the requested point on the card during entry.
+  const front = getPlanStackPoses(0, vh, cardHeight)[0];
+  const cardTop = front.y + (1 - front.scale) * cardHeight / 2;
+  const entryDistance = cardTop + cardHeight * front.scale * entryCardVisibility - anchor;
+  // Match the rail's speed at the end of the entrance to its reading speed.
+  const entryEndSpeed = travelPerStep * lastIndex * (firstRead - entryStart) / (lastRead - firstRead);
+  const entryOffset = entryDistance * (1 - ease(entry)) + entryEndSpeed * entry ** 2 * (1 - entry);
+  const viewportTravel = Math.max(1, vh - pinTop - anchor);
+  const unpinnedTravel = Math.max(0, sceneTop - pinTop);
+  const entryTravel = 1 - (unpinnedTravel + entryOffset) / viewportTravel;
+  const firstSlotGrowth = reserves[0] + copyGap + activeHeadingGap - initialTitleGap;
+  // Long copy or a large tuned gap needs more runway to keep every heading rising.
+  const spaceStart = Math.min(entrySpaceStart, entrySpaceEnd - 1.5 * firstSlotGrowth / viewportTravel);
+  const entrySpace = ease(clamp((entryTravel - spaceStart) / (entrySpaceEnd - spaceStart)));
+  // Start trading space while the first description is still readable.
+  const inset = progress < 1 ? firstSpaceHandoffInset : spaceHandoffInset;
+  const visibility = items.map((_, index) => {
     const distance = Math.abs(progress - index);
-    const expanded = clamp(1 - distance);
-    const fade = ease(clamp((distance - .38) / .12));
-    // Preserve space for the longer Figma copy through the visible part of the fade.
-    const bodyHeight = sizes[index].copy * Math.max(expanded, 1 - fade);
-    const bodyGap = 20 * expanded;
-    const gap = 32 + 96 * expanded;
-    const emphasis = progress < 0 && index === 0 ? 1 : expanded;
-    const position = y;
-    y += sizes[index].heading + bodyHeight + bodyGap + gap;
+    const emphasis = clamp(1 - Math.abs(Math.max(0, progress) - index));
+    const enteringFirst = index === 0 && progress < 0;
+    const expanded = enteringFirst
+      ? entrySpace
+      : ease(clamp((emphasis - inset) / (1 - 2 * inset)));
+    const timeFade = enteringFirst
+      ? 1 - ease(clamp((entryTravel - entryCopyStart) / (entryCopyEnd - entryCopyStart)))
+      : ease(clamp((distance - fadeStart) / (fadeEnd - fadeStart)));
+    const gap = enteringFirst
+      ? mix(initialTitleGap, activeHeadingGap, entrySpace)
+      : headingGap + openGapBonus * expanded;
+    const spaceBelowCopy = gap + reserves[index] * expanded - sizes[index].copy;
+    const roomFade = index === lastIndex ? 0 : 1 - ease(clamp((spaceBelowCopy - 10) / 20));
+    return { emphasis, expanded, gap, fade: Math.max(timeFade, roomFade) };
+  });
+  const expandedIndex = visibility[active].fade < 1 ? active : -1;
+  const nextAccessibilityState = `${active}:${expandedIndex}`;
+  items.forEach(({ row, button, body, copy }, index) => {
+    const { emphasis, expanded, gap, fade } = visibility[index];
     row.style.setProperty("--item-gap", `${gap}px`);
     row.style.setProperty("--heading-color", `color-mix(in srgb, black ${emphasis * 100}%, #d0d5dd)`);
-    body.style.setProperty("--body-height", `${bodyHeight}px`);
-    body.style.setProperty("--body-gap", `${bodyGap}px`);
+    body.style.setProperty("--body-height", `${reserves[index] * expanded}px`);
+    body.style.setProperty("--body-gap", `${copyGap * expanded}px`);
     copy.style.setProperty("--body-opacity", 1 - fade);
     copy.style.setProperty("--body-blur", `${4.75 * fade}px`);
     copy.style.setProperty("--body-y", `${6 * fade}px`);
@@ -111,11 +124,9 @@ function drawRail(progress, cardHeight, sizes, vh, pinTop) {
       button.setAttribute("aria-expanded", String(index === expandedIndex));
       body.setAttribute("aria-hidden", String(index !== expandedIndex));
     }
-    return position;
   });
   accessibilityState = nextAccessibilityState;
-  const railTravel = mix(positions[lower], positions[lower + 1], clamp(progress - lower));
-  rail.style.setProperty("--rail-y", `${targetTop - railTravel}px`);
+  rail.style.setProperty("--rail-y", `${anchor + entryOffset - Math.max(0, progress) * travelPerStep}px`);
 }
 
 function draw(time) {
@@ -124,29 +135,41 @@ function draw(time) {
   const vh = innerHeight;
   const runway = track.offsetHeight - scene.offsetHeight;
   const pinTop = parseFloat(getComputedStyle(scene).top);
-  const target = Math.max(entryStart, Math.min(1, (pinTop - track.getBoundingClientRect().top) / runway));
+  const trackTop = track.getBoundingClientRect().top;
+  const target = Math.max(entryStart, Math.min(1, (pinTop - trackTop) / runway));
+  const cardTarget = getPlanStackProgress(trackTop, vh);
   const dt = Math.min(64, time - (lastTime || time));
   lastTime = time;
-  current = current === undefined ? target : mix(current, target, 1 - Math.exp(-dt / scrubMs));
+  const catchUp = 1 - Math.exp(-dt / scrubMs);
+  current = current === undefined ? target : mix(current, target, catchUp);
   if (Math.abs(current - target) < .0001) current = target;
+  cardCurrent = cardCurrent === undefined ? cardTarget : mix(cardCurrent, cardTarget, catchUp);
+  if (Math.abs(cardCurrent - cardTarget) < .0001) cardCurrent = cardTarget;
   const progress = current <= firstRead
     ? -1 + clamp((current - entryStart) / (firstRead - entryStart))
     : 2 * clamp((current - firstRead) / (lastRead - firstRead));
   const height = deck.offsetHeight;
   const sizes = items.map(({ button, copy }) => ({ heading: button.offsetHeight, copy: copy.offsetHeight }));
-  drawDeck(progress, vh, height);
-  drawRail(progress, height, sizes, vh, pinTop);
-  if (current !== target) schedule();
+  drawPlanStack(cards, cardCurrent, vh, height);
+  drawRail(progress, height, sizes, vh, pinTop, scene.getBoundingClientRect().top);
+  if (current !== target || cardCurrent !== cardTarget) schedule();
 }
 
 function schedule() {
   if (!frame) frame = requestAnimationFrame(draw);
 }
 
+export function setBenefitGaps(active, initial) {
+  activeHeadingGap = active;
+  initialTitleGap = initial;
+  schedule();
+}
+
 function measure() {
   const motion = !compact.matches && !reduced.matches;
   section.toggleAttribute("data-motion", motion);
   current = undefined;
+  cardCurrent = undefined;
   lastTime = 0;
   accessibilityState = undefined;
   if (motion) {
@@ -158,12 +181,13 @@ function measure() {
   } else {
     section.style.removeProperty("--section-bottom");
     cards.forEach(card => card.removeAttribute("style"));
-    items.forEach(({ row, button, body }) => {
+    items.forEach(({ row, button, body, copy }) => {
       row.removeAttribute("style");
       button.removeAttribute("aria-current");
       button.removeAttribute("aria-expanded");
       body.removeAttribute("aria-hidden");
       body.removeAttribute("style");
+      copy.removeAttribute("style");
     });
   }
   items.forEach(({ button }) => { button.disabled = !motion; });
